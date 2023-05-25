@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May  8 12:04:49 2023
+Ce fichier permet de lancer l'analyse des CSV contenus dans un dossier
+"Book reviews" contenu a la racine du projet, sur la base de fonctions
+contenues dans le fichier fonctions_recommandation.py
 
-@author: dylan
+@auteur: Dylan Fagot
 """
 
 import fonctions_recommandation as f
@@ -36,3 +38,6 @@ if __name__ == "__main__" :
     print("Recommandations de livres proches de {} :".format(livre))
     for i in range(n_recommandations):
         print("{}, score = {}".format(liste_noms[i], liste_proximites[i]))
+        
+    print("Etape 6 : analyse des valeurs singlières")
+    f.analyser_valeurs_singulieres(matrice_reduite)

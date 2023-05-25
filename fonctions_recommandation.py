@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May  8 13:22:15 2023
+Ce fichier contient l'ensemble des fonctions utilises par le script
+script_systeme_recommandation.py
 
-@author: dylan
+@author: Dylan Fagot
 """
 
 import csv
@@ -10,6 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 from scipy.sparse import lil_matrix
+import matplotlib.pyplot as plt
 
 
 def lire_matrice_utilite_depuis_csv(chemin_csv):
@@ -133,6 +135,7 @@ def lire_matrice_utilite_depuis_csv(chemin_csv):
     statistiques = {}
     statistiques["taux completude"] = (i_note+1) / (nombre_livres * nombre_utilisateurs) * 100
     statistiques["taux livres significatifs"] = len(liste_livres_significatifs) / len(liste_livres_unique) * 100
+    statistiques["taux utilisateurs restants"] = nombre_utilisateurs / len(liste_utilisateurs_note_non_nulle) * 100
     statistiques["taux notes zero"] = (i_note+1) / (i_ligne+1) * 100
     
     return matrice_utilite, liste_livres_significatifs, liste_utilisateurs_unique, statistiques
@@ -274,4 +277,30 @@ def retourner_noms_livres(chemin_csv, liste_isbn):
        liste_titres = [titres[isbn] for isbn in liste_isbn]
         
     return liste_titres
+
+def analyser_valeurs_singulieres(matrice_reduite):
+    """
+    Cette fonction permet d'afficher les valeurs singulières restantes
+    apres troncation
+
+    Parameters
+    ----------
+    matrice_reduite : Resultat de la SVD tronquee obtenu via scikit-learn
+
+    Returns
+    -------
+    None.
+
+    """
+    # La matrice reduite contient les vecteur singuliers de gauche (unitaires)
+    # et les valeurs singulieres : on peut donc retrouver ces valeurs
+    # via la norme des vecteurs modifies
+    valeurs_singulieres = np.sqrt(np.sum(matrice_reduite**2, 0))
+    
+    plt.figure(0)
+    plt.plot(valeurs_singulieres)
+    plt.xlabel("Numéros de valeur singulière")
+    plt.ylabel("Valeurs")
+    plt.title("Valeurs singulières triées par ordre décroissant")
+    
  
